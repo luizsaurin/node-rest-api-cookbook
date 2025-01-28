@@ -2,7 +2,8 @@
 import dotenv from 'dotenv'
 import express from 'express'
 import morgan from 'morgan'
-import globalErrorHandler from './middleware/globalErrorHandler.js'
+import mongoose from 'mongoose'
+import errorHandler from './middleware/errorHandler.js'
 import router from './routes.js'
 
 // Uncaught Exception rrror handler
@@ -31,7 +32,12 @@ app.all('*', (req, res, next) => {
 })
 
 // Global error handler
-app.use(globalErrorHandler)
+app.use(errorHandler)
+
+// Connect to database
+mongoose.connect(process.env.DATABASE_CONNECTION).then(() => {
+  console.log('Database connected')
+})
 
 const server = app.listen(process.env.PORT, () => {
   console.log(`App running on ${process.env.PORT} in ${process.env.NODE_ENV} mode`)
