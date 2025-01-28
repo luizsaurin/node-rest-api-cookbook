@@ -1,25 +1,18 @@
 import User from '../model/User.js'
-import HttpError from '../util/httpError.js'
+import QueryOptions from '../util/queryOptions.js'
 
-const findAll = async () => {
-  throw new HttpError('Not Implemented', 501)
+const findAll = async (query) => {
+	const options = new QueryOptions(User.find(), query).filter().sort().limitFields().paginate()
+	const result = await options.query
+	return result
 }
 
-const findById = async () => {
-  throw new HttpError('Not Implemented', 501)
-}
+const findById = async (id) => await User.findById(id)
 
-const create = async (payload) => {
-  const newUser = await User.create(payload)
-  return newUser
-}
+const create = async (payload) => await User.create(payload)
 
-const update = async () => {
-  throw new HttpError('Not Implemented', 501)
-}
+const update = async () => {}
 
-const remove = async () => {
-  throw new HttpError('Not Implemented', 501)
-}
+const remove = async () => {}
 
 export default { findAll, findById, create, update, remove }
