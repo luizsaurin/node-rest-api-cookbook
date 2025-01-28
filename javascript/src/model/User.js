@@ -5,11 +5,8 @@ const schema = new mongoose.Schema(
     firstName: String,
     lastName: String,
     age: Number,
-    email: {
-      type: String,
-      unique: true
-    },
-    active: Boolean
+    email: { type: String, unique: true },
+    active: { type: Boolean, default: true }
   },
   {
     toJSON: {
