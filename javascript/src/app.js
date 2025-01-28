@@ -5,6 +5,7 @@ import mongoose from 'mongoose'
 import morgan from 'morgan'
 import errorHandler from './middleware/errorHandler.js'
 import router from './routes.js'
+import { response403 } from './util/responseUtils.js'
 
 // Uncaught Exception rrror handler
 process.on('uncaughtException', (err) => {
@@ -28,7 +29,7 @@ app.use(router)
 
 // Error handler for non existing routes
 app.all('*', (req, res, next) => {
-	res.status(403).send(null)
+	response403(res)
 })
 
 // Error handler for errors that were not handled bu the previous middlewares

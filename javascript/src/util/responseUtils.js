@@ -34,6 +34,10 @@ export const response400 = (res, message) => {
 	})
 }
 
+export const response403 = (res) => {
+	res.status(403).send(null)
+}
+
 export const response404 = (res, message) => {
 	res.status(404).json({
 		status: errorStatus,

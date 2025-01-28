@@ -9,6 +9,7 @@ const createRoute = (path) => {
 	router.use(path, newRouter)
 	return newRouter
 }
+
 const usersRoutes = createRoute('/api/v1/users')
 usersRoutes.get('/', usersController.findAll)
 usersRoutes.get('/:id', usersController.findById)
