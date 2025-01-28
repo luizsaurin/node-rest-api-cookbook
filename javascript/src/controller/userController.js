@@ -1,17 +1,17 @@
 import userService from '../service/userService.js'
 import {
-	responseFindAndCount,
+	response200,
+	response200FindAndCount,
 	response201,
-	response501,
-	responseError,
+	response204,
 	response404,
-	response200
+	responseError
 } from '../util/responseUtils.js'
 
 const findAll = async (req, res) => {
 	try {
 		const results = await userService.findAll(req.query)
-		responseFindAndCount(res, results, results.length)
+		response200FindAndCount(res, results, results.length)
 	} catch (error) {
 		responseError(res, error)
 	}
@@ -38,11 +38,27 @@ const create = async (req, res) => {
 }
 
 const update = async (req, res) => {
-	response501(res)
+	try {
+		const user = await userService.update(req.params.id, req.body)
+
+		if (!user) return response404(res, `User with id [${req.params.id}] not found`)
+
+		response200(res, user)
+	} catch (error) {
+		responseError(res, error)
+	}
 }
 
 const remove = async (req, res) => {
-	response501(res)
+	try {
+		const user = await userService.remove(req.params.id)
+
+		if (!user) return response404(res, `User with id [${req.params.id}] not found`)
+
+		response204(res)
+	} catch (error) {
+		responseError(res, error)
+	}
 }
 
 export default { findAll, findById, create, update, remove }

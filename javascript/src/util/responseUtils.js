@@ -8,7 +8,7 @@ export const response200 = (res, data) => {
 	})
 }
 
-export const responseFindAndCount = (res, data, totalResults) => {
+export const response200FindAndCount = (res, data, totalResults) => {
 	res.status(200).json({
 		status: successStatus,
 		totalResults,
@@ -24,9 +24,7 @@ export const response201 = (res, data) => {
 }
 
 export const response204 = (res) => {
-	res.status(204).json({
-		status: successStatus
-	})
+	res.status(204).send(null)
 }
 
 export const response400 = (res, message) => {

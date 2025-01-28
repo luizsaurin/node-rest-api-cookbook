@@ -7,12 +7,24 @@ const findAll = async (query) => {
 	return result
 }
 
-const findById = async (id) => await User.findById(id)
+const findById = async (id) => {
+	const user = await User.findById(id)
+	return user
+}
 
-const create = async (payload) => await User.create(payload)
+const create = async (payload) => {
+	const user = await User.create(payload)
+	return user
+}
 
-const update = async () => {}
+const update = async (id, payload) => {
+	const user = await User.findByIdAndUpdate(id, payload, { new: true })
+	return user
+}
 
-const remove = async () => {}
+const remove = async (id) => {
+	const user = await User.findByIdAndDelete(id)
+	return user
+}
 
 export default { findAll, findById, create, update, remove }

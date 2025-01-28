@@ -16,7 +16,6 @@ const schema = new mongoose.Schema(
 			transform: (doc, ret) => {
 				ret.id = ret._id // Add the virtual `id` field
 				delete ret._id // Remove `_id`
-				delete ret.active // Explicitly remove `active` from output
 				return ret // Return the transformed object
 			}
 		},

@@ -13,7 +13,7 @@ const usersRoutes = createRoute('/api/v1/users')
 usersRoutes.get('/', usersController.findAll)
 usersRoutes.get('/:id', usersController.findById)
 usersRoutes.post('/', payloadValidator.userCreate, usersController.create)
-usersRoutes.put('/:id', usersController.update)
+usersRoutes.patch('/:id', payloadValidator.userUpdate, usersController.update)
 usersRoutes.delete('/:id', usersController.remove)
 
 export default router
