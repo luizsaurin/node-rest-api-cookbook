@@ -1,34 +1,41 @@
 import mongoose from 'mongoose'
+import bcrypt from 'bcryptjs'
 
 const schema = new mongoose.Schema(
 	{
 		firstName: String,
 		lastName: String,
-		age: Number,
-		email: { type: String, unique: true },
-		active: { type: Boolean, default: true }
+		email: { type: String, required: true, unique: true },
+		active: { type: Boolean, default: true },
+		role: {
+			type: String,
+			enum: ['user', 'admin'],
+			default: 'user'
+		},
+		password: {
+			type: String,
+			required: true
+		},
+		passwordChangedAt: Date,
+		passwordResetToken: String,
+		passwordResetExpires: Date
 	},
 	{
-		timestamps: true, // Automatically adds `createdAt` and `updatedAt`
-		toJSON: {
-			virtuals: true, // Include virtuals like `id`
-			versionKey: false, // Remove the `__v` field
-			transform: (doc, ret) => {
-				ret.id = ret._id // Add the virtual `id` field
-				delete ret._id // Remove `_id`
-				return ret // Return the transformed object
-			}
-		},
-		toObject: {
-			virtuals: true // Include virtuals when converting to plain objects
-		}
+		timestamps: true // Automatically adds `createdAt` and `updatedAt`
 	}
 )
 
-// Define the virtual `id` field
-schema.virtual('id').get(function () {
-	return this._id.toHexString()
+// Encrypt password before save
+schema.pre('save', async function (next) {
+	if (!this.isModified('password')) return next()
+	this.password = await bcrypt.hash(this.password, 12)
+	next()
 })
+
+// Verify input password
+schema.methods.verifyPassword = async function (input, userPassword) {
+	return await bcrypt.compare(input, userPassword)
+}
 
 // Create and export the model
 const User = mongoose.model('User', schema)

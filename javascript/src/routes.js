@@ -1,6 +1,7 @@
 import express from 'express'
 import usersController from './controller/userController.js'
 import payloadValidator from './middleware/payloadValidator.js'
+import authController from './controller/authController.js'
 
 const router = express.Router()
 
@@ -16,5 +17,9 @@ usersRoutes.get('/:id', usersController.findById)
 usersRoutes.post('/', payloadValidator.userCreate, usersController.create)
 usersRoutes.patch('/:id', payloadValidator.userUpdate, usersController.update)
 usersRoutes.delete('/:id', usersController.remove)
+
+const authRoutes = createRoute('/api/v1/auth')
+authRoutes.post('/signup', payloadValidator.userSignup, authController.signup)
+authRoutes.post('/login', payloadValidator.userLogin, authController.login)
 
 export default router

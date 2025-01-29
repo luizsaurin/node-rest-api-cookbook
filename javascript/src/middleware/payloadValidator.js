@@ -7,8 +7,9 @@ const userCreate = async (req, res, next) => {
 		const schema = joi.object({
 			firstName: joi.string().required(),
 			lastName: joi.string().required(),
-			age: joi.number().required(),
-			email: joi.string().email().required()
+			email: joi.string().email().required(),
+			password: joi.string().required(),
+			role: joi.string().required()
 		})
 
 		const { error } = schema.validate(req.body, { abortEarly: false })
@@ -32,7 +33,6 @@ const userUpdate = (req, res, next) => {
 		const schema = joi.object({
 			firstName: joi.string().optional(),
 			lastName: joi.string().optional(),
-			age: joi.number().optional(),
 			email: joi.string().email().optional(),
 			active: joi.boolean().optional()
 		})
@@ -53,4 +53,52 @@ const userUpdate = (req, res, next) => {
 	}
 }
 
-export default { userCreate, userUpdate }
+const userSignup = async (req, res, next) => {
+	try {
+		const schema = joi.object({
+			firstName: joi.string().required(),
+			lastName: joi.string().required(),
+			email: joi.string().email().required(),
+			password: joi.string().required()
+		})
+
+		const { error } = schema.validate(req.body, { abortEarly: false })
+
+		if (error) {
+			const message = error.details
+				.map((err) => err.message)
+				.join('; ')
+				.replace(/\"/g, '')
+			return response400(res, message)
+		}
+
+		next()
+	} catch (error) {
+		response500(res, error.message)
+	}
+}
+
+const userLogin = async (req, res, next) => {
+	try {
+		const schema = joi.object({
+			email: joi.string().email().required(),
+			password: joi.string().required()
+		})
+
+		const { error } = schema.validate(req.body, { abortEarly: false })
+
+		if (error) {
+			const message = error.details
+				.map((err) => err.message)
+				.join('; ')
+				.replace(/\"/g, '')
+			return response400(res, message)
+		}
+
+		next()
+	} catch (error) {
+		response500(res, error.message)
+	}
+}
+
+export default { userCreate, userUpdate, userSignup, userLogin }

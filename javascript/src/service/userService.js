@@ -1,25 +1,33 @@
+import userCreatedResponse from '../dto/user/userCreatedResponse.js'
+import findAllUsersReponse from '../dto/user/findAllUsersReponse.js'
+import findUserByIdResponse from '../dto/user/findUserByIdResponse.js'
+import userUpdatedResponse from '../dto/user/userUpdatedResponse.js'
 import User from '../model/User.js'
 import QueryOptions from '../util/queryOptions.js'
 
 const findAll = async (query) => {
 	const options = new QueryOptions(User.find(), query).filter().sort().limitFields().paginate()
-	const result = await options.query
-	return result
+	const users = await options.query
+	const formattedResponse = findAllUsersReponse(users)
+	return formattedResponse
 }
 
 const findById = async (id) => {
 	const user = await User.findById(id)
-	return user
+	const formattedResponse = findUserByIdResponse(user)
+	return formattedResponse
 }
 
 const create = async (payload) => {
 	const user = await User.create(payload)
-	return user
+	const formattedResponse = userCreatedResponse(user)
+	return userCreatedResponse(formattedResponse)
 }
 
 const update = async (id, payload) => {
 	const user = await User.findByIdAndUpdate(id, payload, { new: true })
-	return user
+	const formattedResponse = userUpdatedResponse(user)
+	return formattedResponse
 }
 
 const remove = async (id) => {

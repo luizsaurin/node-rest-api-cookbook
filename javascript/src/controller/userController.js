@@ -21,7 +21,7 @@ const findById = async (req, res) => {
 	try {
 		const user = await userService.findById(req.params.id)
 
-		if (!user) return response404(res, `User with id [${req.params.id}] not found`)
+		if (!user) return response404(res, `User with id ${req.params.id} not found`)
 
 		response200(res, user)
 	} catch (error) {
@@ -41,7 +41,7 @@ const update = async (req, res) => {
 	try {
 		const user = await userService.update(req.params.id, req.body)
 
-		if (!user) return response404(res, `User with id [${req.params.id}] not found`)
+		if (!user) return response404(res, `User with id ${req.params.id} not found`)
 
 		response200(res, user)
 	} catch (error) {
@@ -53,7 +53,7 @@ const remove = async (req, res) => {
 	try {
 		const user = await userService.remove(req.params.id)
 
-		if (!user) return response404(res, `User with id [${req.params.id}] not found`)
+		if (!user) return response404(res, `User with id ${req.params.id} not found`)
 
 		response204(res)
 	} catch (error) {
