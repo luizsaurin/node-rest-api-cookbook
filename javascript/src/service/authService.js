@@ -1,8 +1,6 @@
-import jwt from 'jsonwebtoken'
 import userCreatedResponse from '../dto/user/userCreatedResponse.js'
 import User from '../model/User.js'
-
-const signToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
+import jwtUtils from '../util/jwtUtils.js'
 
 const signup = async (payload) => {
 	const user = await User.create(payload)
@@ -19,7 +17,7 @@ const login = async (payload) => {
 		return undefined
 	}
 
-	const token = signToken(user._id)
+	const token = jwtUtils.generateAccessToken(user)
 
 	return token
 }
