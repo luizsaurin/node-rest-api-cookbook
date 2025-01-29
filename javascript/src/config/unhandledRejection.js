@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const handleUnhandledRejections = (server) => {
+const handleUnhandledRejections = async (server) => {
 	process.on('unhandledRejection', (err) => {
 		console.error('Unhandled Rejection:', err.name, err.message)
 		server.close(() => {

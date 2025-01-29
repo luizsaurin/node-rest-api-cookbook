@@ -11,11 +11,11 @@ const signup = async (req, res) => {
 
 const login = async (req, res) => {
 	try {
-		const result = await authService.login(req.body)
+		const token = await authService.login(req.body)
 
-		if (!result) return response400(res, `Invalid credentiais`)
+		if (!token) return response400(res, `Invalid credentiais`)
 
-		response200(res, result)
+		response200(res, token)
 	} catch (error) {
 		responseError(res, error)
 	}

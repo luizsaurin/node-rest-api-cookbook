@@ -2,7 +2,7 @@ import morgan from 'morgan'
 import express from 'express'
 import errorHandler from '../middleware/errorHandler.js'
 
-const setupMiddleware = (app) => {
+const setupMiddleware = async (app) => {
 	// Morgan logging
 	app.use(morgan('dev'))
 

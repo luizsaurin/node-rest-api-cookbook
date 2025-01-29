@@ -8,12 +8,18 @@ import QueryOptions from '../util/queryOptions.js'
 const findAll = async (query) => {
 	const options = new QueryOptions(User.find(), query).filter().sort().limitFields().paginate()
 	const users = await options.query
+
+	if (!users) return undefined
+
 	const formattedResponse = findAllUsersReponse(users)
 	return formattedResponse
 }
 
 const findById = async (id) => {
 	const user = await User.findById(id)
+
+	if (!user) return undefined
+
 	const formattedResponse = findUserByIdResponse(user)
 	return formattedResponse
 }
@@ -26,6 +32,9 @@ const create = async (payload) => {
 
 const update = async (id, payload) => {
 	const user = await User.findByIdAndUpdate(id, payload, { new: true })
+
+	if (!user) return undefined
+
 	const formattedResponse = userUpdatedResponse(user)
 	return formattedResponse
 }

@@ -1,7 +1,7 @@
 import router from '../routes.js'
 import { response403 } from '../util/responseUtils.js'
 
-const setupRoutes = (app) => {
+const setupRoutes = async (app) => {
 	// Main routes
 	app.use(router)
 

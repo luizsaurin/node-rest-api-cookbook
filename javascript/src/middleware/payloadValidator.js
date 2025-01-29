@@ -8,8 +8,7 @@ const userCreate = async (req, res, next) => {
 			firstName: joi.string().required(),
 			lastName: joi.string().required(),
 			email: joi.string().email().required(),
-			password: joi.string().required(),
-			role: joi.string().required()
+			password: joi.string().required()
 		})
 
 		const { error } = schema.validate(req.body, { abortEarly: false })
@@ -34,7 +33,9 @@ const userUpdate = (req, res, next) => {
 			firstName: joi.string().optional(),
 			lastName: joi.string().optional(),
 			email: joi.string().email().optional(),
-			active: joi.boolean().optional()
+			active: joi.boolean().optional(),
+			password: joi.string().optional(),
+			role: joi.string().optional()
 		})
 
 		const { error } = schema.validate(req.body, { abortEarly: false })
