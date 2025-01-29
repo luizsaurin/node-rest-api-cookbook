@@ -16,9 +16,7 @@ const schema = new mongoose.Schema(
 			type: String,
 			required: true
 		},
-		passwordChangedAt: Date,
-		passwordResetToken: String,
-		passwordResetExpires: Date
+		passwordChangedAt: Date
 	},
 	{
 		timestamps: true // Automatically adds `createdAt` and `updatedAt`
@@ -35,6 +33,15 @@ schema.pre('save', async function (next) {
 // Verify input password
 schema.methods.verifyPassword = async function (input, userPassword) {
 	return await bcrypt.compare(input, userPassword)
+}
+
+schema.methods.changedPasswordAfterTokenIssued = function (JWTTimestamp) {
+	if (this.passwordChangedAt) {
+		const changedTimestamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10)
+		return JWTTimestamp < changedTimestamp
+	}
+
+	return false
 }
 
 // Create and export the model

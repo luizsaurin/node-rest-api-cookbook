@@ -2,6 +2,7 @@ import express from 'express'
 import usersController from './controller/userController.js'
 import payloadValidator from './middleware/payloadValidator.js'
 import authController from './controller/authController.js'
+import protect from './middleware/protect.js'
 
 const router = express.Router()
 
@@ -12,7 +13,7 @@ const createRoute = (path) => {
 }
 
 const usersRoutes = createRoute('/api/v1/users')
-usersRoutes.get('/', usersController.findAll)
+usersRoutes.get('/', protect, usersController.findAll)
 usersRoutes.get('/:id', usersController.findById)
 usersRoutes.post('/', payloadValidator.userCreate, usersController.create)
 usersRoutes.patch('/:id', payloadValidator.userUpdate, usersController.update)
