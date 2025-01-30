@@ -27,17 +27,6 @@ export default [
 			}
 		},
 		rules: {
-			// Import rules
-			'import/extensions': [
-				'error',
-				'ignorePackages',
-				{
-					js: 'always',
-					mjs: 'always',
-					ts: 'never'
-				}
-			],
-
 			// Prettier formatting rules
 			'prettier/prettier': [
 				'error',
