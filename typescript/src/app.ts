@@ -7,6 +7,7 @@ import morgan from 'morgan'
 import globalErrorHandler from './middleware/globalErrorHandler'
 import router from './routes'
 import helmet from 'helmet'
+import mongoSanitize from 'express-mongo-sanitize'
 
 dotenv.config()
 
@@ -33,9 +34,10 @@ class App {
 
 	private setupMiddlewares() {
 		this.app.use(cors())
-		this.app.use('/api', rateLimit({ max: 50, windowMs: 60000, message: null }))
 		this.app.use(helmet())
+		this.app.use('/api', rateLimit({ max: 50, windowMs: 60000, message: null }))
 		this.app.use(express.json({ type: 'application/json', limit: '10kb' }))
+		this.app.use(mongoSanitize())
 		this.app.use(express.text())
 		this.app.use(express.urlencoded({ extended: true }))
 	}
