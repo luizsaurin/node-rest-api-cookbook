@@ -1,14 +1,14 @@
 /* eslint-disable no-console */
 import cors from 'cors'
 import dotenv from 'dotenv'
-import express, { Request, Response } from 'express'
-import rateLimit from 'express-rate-limit'
-import morgan from 'morgan'
-import globalErrorHandler from './middleware/globalErrorHandler'
-import router from './routes'
-import helmet from 'helmet'
+import express, { NextFunction, Request, Response } from 'express'
 import mongoSanitize from 'express-mongo-sanitize'
+import rateLimit from 'express-rate-limit'
+import helmet from 'helmet'
+import morgan from 'morgan'
 import xss from 'xss-clean'
+import router from './routes'
+import { errorResponse, exceptionResponse } from './util/responseUtils'
 
 dotenv.config()
 
@@ -22,7 +22,7 @@ class App {
 		this.setupMiddlewares()
 		this.setupRouterLogging()
 		this.setupRouter()
-		this.setupGlobalErrorHandler()
+		this.setupExceptionHandler()
 		console.log('✅ App setup finished')
 	}
 
@@ -51,12 +51,14 @@ class App {
 
 		// Handle unexisting routes
 		this.app.all('*', (req: Request, res: Response) => {
-			res.status(403).send(null)
+			errorResponse(res, 403)
 		})
 	}
 
-	private setupGlobalErrorHandler() {
-		this.app.use(globalErrorHandler)
+	private setupExceptionHandler() {
+		this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+			exceptionResponse(res, err)
+		})
 	}
 }
 

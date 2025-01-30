@@ -1,4 +1,5 @@
 import express from 'express'
+import UserController from './controller/UserController'
 
 const router = express.Router()
 
@@ -8,9 +9,7 @@ const createRoute = (path: string) => {
 	return newRouter
 }
 
-const testRoutes = createRoute('/api/v1/test')
-testRoutes.get('/', (req, res) => {
-	res.status(200).json({ status: 'success', message: 'Hello from test route' })
-})
+const userRoutes = createRoute('/api/v1/users')
+userRoutes.get('/', UserController.findAll)
 
 export default router
