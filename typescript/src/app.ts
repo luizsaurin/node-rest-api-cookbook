@@ -1,18 +1,17 @@
-import express from "express";
-import dotenv from "dotenv";
+/* eslint-disable no-console */
+import express from 'express'
+import dotenv from 'dotenv'
 
-dotenv.config();
+dotenv.config()
 
-const app = express();
+const app = express()
 
-app.use(express.json());
+app.use(express.json())
 
-app.get("/", (req, res) => {
-  res.send("Hello, TypeScript!");
-});
+app.get('/', (req, res) => {
+	res.send('Hello, TypeScript!')
+})
 
 app.listen(process.env.PORT, () => {
-  console.log(
-    `Server is running on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`
-  );
-});
+	console.log(`Server is running on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`)
+})
