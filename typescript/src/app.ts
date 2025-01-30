@@ -1,24 +1,59 @@
 /* eslint-disable no-console */
+import cors from 'cors'
 import dotenv from 'dotenv'
-import express from 'express'
-import connectToDatabase from './config/connectToDatabase'
-import setupMiddleware from './config/setupMiddleware'
-import setupRoutes from './config/setupRoutes'
-import handleUncaughtException from './config/uncaughtExceptionHandler'
-import handleUnhandledRejections from './config/unhandledRejectionHandler'
+import express, { Request, Response } from 'express'
+import rateLimit from 'express-rate-limit'
+import morgan from 'morgan'
+import globalErrorHandler from './middleware/globalErrorHandler'
+import router from './routes'
 
 dotenv.config()
 
-handleUncaughtException()
+class App {
+	public app: express.Application
 
-const app = express()
+	constructor() {
+		console.log('💫 App setup started')
+		this.setupUncaughtExceptionHandler()
+		this.app = express()
+		this.setupMiddlewares()
+		this.setupRouterLogging()
+		this.setupRouter()
+		this.setupGlobalErrorHandler()
+		console.log('✅ App setup finished')
+	}
 
-setupMiddleware(app)
-setupRoutes(app)
-connectToDatabase()
+	private setupUncaughtExceptionHandler() {
+		process.on('uncaughtException', (err) => {
+			console.error(err.name, err.message)
+			process.exit(1)
+		})
+	}
 
-const server = app.listen(process.env.PORT, () => {
-	console.log(`Server is running on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`)
-})
+	private setupMiddlewares() {
+		this.app.use(cors())
+		this.app.use('/api', rateLimit({ max: 50, windowMs: 60000, message: null }))
+		this.app.use(express.json({ type: 'application/json', limit: '10kb' }))
+		this.app.use(express.text())
+		this.app.use(express.urlencoded({ extended: true }))
+	}
 
-handleUnhandledRejections(server)
+	private setupRouterLogging() {
+		this.app.use(morgan('dev'))
+	}
+
+	private setupRouter() {
+		this.app.use(router)
+
+		// Handle unexisting routes
+		this.app.all('*', (req: Request, res: Response) => {
+			res.status(403).send(null)
+		})
+	}
+
+	private setupGlobalErrorHandler() {
+		this.app.use(globalErrorHandler)
+	}
+}
+
+export default new App().app
