@@ -6,6 +6,9 @@
   "author": "Luiz Saurin",
   "type": "commonjs",
   "main": "app.js",
+  "engines": {
+    "node": ">=22.13.0"
+  },
   "scripts": {
     "start": "tsc && node dist/app.js",
     "dev": "ts-node-dev --respawn --transpile-only --ignore-watch node_modules --no-notify src/app.ts"
@@ -17,6 +20,7 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
+    "dotenv": "^16.4.7",
     "express": "^4.21.2"
   }
 }
