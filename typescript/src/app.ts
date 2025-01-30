@@ -3,6 +3,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import handleUncaughtException from './config/uncaughtException'
 import handleUnhandledRejections from './config/unhandledRejection'
+import setupMiddleware from './config/middleware'
 
 dotenv.config()
 
@@ -10,7 +11,7 @@ handleUncaughtException()
 
 const app = express()
 
-app.use(express.json())
+setupMiddleware(app)
 
 app.get('/', (req, res) => {
 	res.send('Hello, TypeScript!')
