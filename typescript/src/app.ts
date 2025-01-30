@@ -1,10 +1,11 @@
 /* eslint-disable no-console */
-import express from 'express'
 import dotenv from 'dotenv'
-import handleUncaughtException from './config/uncaughtException'
-import handleUnhandledRejections from './config/unhandledRejection'
-import setupMiddleware from './config/middleware'
-import setupRoutes from './config/routes'
+import express from 'express'
+import connectToDatabase from './config/connectToDatabase'
+import setupMiddleware from './config/setupMiddleware'
+import setupRoutes from './config/setupRoutes'
+import handleUncaughtException from './config/uncaughtExceptionHandler'
+import handleUnhandledRejections from './config/unhandledRejectionHandler'
 
 dotenv.config()
 
@@ -14,6 +15,7 @@ const app = express()
 
 setupMiddleware(app)
 setupRoutes(app)
+connectToDatabase()
 
 const server = app.listen(process.env.PORT, () => {
 	console.log(`Server is running on port ${process.env.PORT} in ${process.env.NODE_ENV} mode`)

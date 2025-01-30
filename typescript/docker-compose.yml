@@ -1,0 +1,13 @@
+services:
+ mongo:
+  container_name: mongo
+  network_mode: bridge
+  image: mongo:latest
+  restart: unless-stopped
+  environment:
+   MONGO_INITDB_ROOT_USERNAME: root
+   MONGO_INITDB_ROOT_PASSWORD: root
+  # volumes:
+  #   - ./.docker/mongo/data:/data/db
+  ports:
+   - 3001:27017

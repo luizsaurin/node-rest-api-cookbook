@@ -1,6 +1,6 @@
 import morgan from 'morgan'
 import express from 'express'
-import errorHandler from '../middleware/errorHandler'
+import globalErrorHandler from '../middleware/globalErrorHandler'
 import { Express } from 'express-serve-static-core'
 
 const setupMiddleware = async (app: Express) => {
@@ -11,7 +11,7 @@ const setupMiddleware = async (app: Express) => {
 	app.use(express.json({ limit: '10kb' }))
 
 	// Global error handler
-	app.use(errorHandler)
+	app.use(globalErrorHandler)
 }
 
 export default setupMiddleware
