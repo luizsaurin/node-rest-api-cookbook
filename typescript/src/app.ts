@@ -59,7 +59,7 @@ class App {
 									: 0 // no color
 				const responseTime = tokens['response-time'](req, res)
 
-				// Example output: GET /api/v1/users?sort={"name":1} 200
+				// Example output: GET /api/v1/users?filter={"role":"admin"}&sort={"name":1} 200 - 1.000 ms
 				return `\x1b[m${tokens.method(req, res)}\x1b[0m ${url} \x1b[${statusColor}m${status}\x1b[0m - ${responseTime} ms`
 			})
 		)
