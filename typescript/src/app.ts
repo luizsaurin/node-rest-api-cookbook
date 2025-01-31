@@ -20,7 +20,7 @@ class App {
 		this.setupUncaughtExceptionHandler()
 		this.app = express()
 		this.setupMiddlewares()
-		this.setupRouterLogging()
+		this.setupRequestLoggin()
 		this.setupRouter()
 		this.setupExceptionHandler()
 		console.log('✅ App setup finished')
@@ -42,8 +42,27 @@ class App {
 		this.app.use(xss())
 	}
 
-	private setupRouterLogging() {
-		this.app.use(morgan('dev'))
+	private setupRequestLoggin() {
+		this.app.use(
+			morgan((tokens, req, res) => {
+				const url = decodeURIComponent(tokens.url(req, res) || '')
+				const status = Number(tokens.status(req, res))
+				const statusColor =
+					status >= 500
+						? 31 // red
+						: status >= 400
+							? 33 // yellow
+							: status >= 300
+								? 36 // cyan
+								: status >= 200
+									? 32 // green
+									: 0 // no color
+				const responseTime = tokens['response-time'](req, res)
+
+				// Example output: GET /api/v1/users?sort={"name":1} 200
+				return `\x1b[m${tokens.method(req, res)}\x1b[0m ${url} \x1b[${statusColor}m${status}\x1b[0m - ${responseTime} ms`
+			})
+		)
 	}
 
 	private setupRouter() {
