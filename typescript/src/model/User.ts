@@ -1,6 +1,17 @@
-import mongoose from 'mongoose'
+import mongoose, { Document } from 'mongoose'
 
-const schema = new mongoose.Schema(
+export interface IUser extends Document {
+	_id: string
+	name: string
+	email: string
+	password: string
+	role: 'admin' | 'user'
+	createdAt: Date
+	updatedAt: Date
+	__v: number
+}
+
+const schema = new mongoose.Schema<IUser>(
 	{
 		name: {
 			type: String
@@ -11,19 +22,19 @@ const schema = new mongoose.Schema(
 		},
 		password: {
 			type: String,
-			required: true
+			required: true,
+			select: false
 		},
 		role: {
 			type: String,
 			enum: ['admin', 'user'],
-			default: 'user'
+			default: 'user',
+			select: false
 		}
 	},
 	{
-		timestamps: true
+		timestamps: true // Automatically adds `createdAt` and `updatedAt`
 	}
 )
 
-const User = mongoose.model('User', schema)
-
-export default User
+export default mongoose.model<IUser>('User', schema)

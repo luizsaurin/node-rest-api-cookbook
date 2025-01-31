@@ -20,7 +20,7 @@ class App {
 		this.setupUncaughtExceptionHandler()
 		this.app = express()
 		this.setupMiddlewares()
-		this.setupRequestLoggin()
+		this.setupRequestLogging()
 		this.setupRouter()
 		this.setupExceptionHandler()
 		console.log('✅ App setup finished')
@@ -42,7 +42,7 @@ class App {
 		this.app.use(xss())
 	}
 
-	private setupRequestLoggin() {
+	private setupRequestLogging() {
 		this.app.use(
 			morgan((tokens, req, res) => {
 				const url = decodeURIComponent(tokens.url(req, res) || '')

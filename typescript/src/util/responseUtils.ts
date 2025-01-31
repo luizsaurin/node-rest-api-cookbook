@@ -1,67 +1,58 @@
-/* eslint-disable no-console */
 import { Response } from 'express'
-
-type SuccessResponse = {
-	status: 'success'
-	message?: string
-	data?: unknown
-}
-
-type ErrorResponse = {
-	status: 'error'
-	message?: string
-}
-
-type ExceptionResponse = {
-	status: 'error'
-	message: string
-	error?: unknown
-}
 
 /**
  * Handles success responses
  */
 export const successResponse = (res: Response, statusCode: number, message?: string, data?: unknown) => {
-	const response: SuccessResponse = {
+	return res.status(statusCode).json({
 		status: 'success',
 		message,
 		data
-	}
-
-	if (message || data) {
-		return res.status(statusCode).json(response)
-	}
-
-	return res.status(statusCode).send(null)
+	})
 }
 
 /**
  * Handles expected error responses (e.g. validation errors, bad request, unauthorized)
  */
 export const errorResponse = (res: Response, statusCode: number, message?: string) => {
-	const code = statusCode || 500
-
-	const response: ErrorResponse = {
+	return res.status(statusCode || 500).json({
 		status: 'error',
 		message
-	}
-
-	if (message) {
-		return res.status(code).json(response)
-	}
-
-	return res.status(code).send(null)
+	})
 }
 
 /**
  * Handles unexpected error responses (e.g. internal server error, database errors)
  */
-export const exceptionResponse = (res: Response, err: unknown) => {
-	console.error(err)
+export const exceptionResponse = (res: Response, err: Error | unknown) => {
+	// MongoDB - CastError (e.g. invalid ObjectId)
+	if (err instanceof Error && err.name === 'CastError') {
+		const param = (err as { path?: string }).path || 'input'
+		const { value } = err as { value?: string }
+		errorResponse(res, 400, `Invalid ${param} ${value}`)
+		return
+	}
 
-	const response: ExceptionResponse = {
+	// Invalid query parameters (e.g. filter, sort)
+	if (err instanceof Error && err.name === 'InvalidQueryParamError') {
+		errorResponse(res, 400, err.message)
+		return
+	}
+
+	// SyntaxError (e.g. invalid JSON)
+	if (err instanceof Error && err.name === 'SyntaxError') {
+		errorResponse(res, 400, err.message)
+		return
+	}
+
+	// TypeError (e.g. invalid mongo query params)
+	if (err instanceof Error && err.name === 'TypeError') {
+		errorResponse(res, 400, err.message)
+		return
+	}
+
+	return res.status(500).json({
 		status: 'error',
 		message: err instanceof Error ? err.message : 'Internal Server Error'
-	}
-	return res.status(500).json(response)
+	})
 }
