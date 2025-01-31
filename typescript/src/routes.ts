@@ -10,6 +10,6 @@ const createRoute = (path: string) => {
 }
 
 const userRoutes = createRoute('/api/v1/users')
-userRoutes.get('/', UserController.findAll)
+userRoutes.get('/', (req, res) => UserController.findAll(req, res))
 
 export default router
