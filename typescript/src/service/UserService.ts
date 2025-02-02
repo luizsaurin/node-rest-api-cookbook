@@ -7,7 +7,7 @@ class UserService {
 
 		const query = User.find(JSON.parse((filter as string) || '{}'))
 			.sort(JSON.parse((sort as string) || '{"createdAt":-1}'))
-			.select(JSON.parse((select as string) || '{"__v":0}'))
+			.select(JSON.parse((select as string) || '{}'))
 			.skip(parseInt(skip as string, 10) || 0)
 			.limit(parseInt(limit as string, 10) || 10)
 

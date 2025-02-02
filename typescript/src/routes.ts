@@ -1,6 +1,7 @@
 import express from 'express'
 import UserController from './controller/UserController'
-import { findAllUsersQueryValidator } from './middleware/findAllUsersQueryValidator'
+import { findAllUsersQueryValidator } from './validator/findAllUsersQueryValidator'
+import { createUserValidator } from './validator/createUserValidator'
 
 const router = express.Router()
 
@@ -13,6 +14,6 @@ const createRoute = (path: string) => {
 const userRoutes = createRoute('/api/v1/users')
 userRoutes.get('/', findAllUsersQueryValidator, (req, res) => UserController.findAll(req, res))
 userRoutes.get('/:id', (req, res) => UserController.findById(req, res))
-userRoutes.post('/', (req, res) => UserController.create(req, res))
+userRoutes.post('/', createUserValidator, (req, res) => UserController.create(req, res))
 
 export default router

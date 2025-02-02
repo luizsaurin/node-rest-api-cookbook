@@ -8,7 +8,6 @@ export interface IUser extends Document {
 	role: 'admin' | 'user'
 	createdAt: Date
 	updatedAt: Date
-	__v: number
 }
 
 const schema = new mongoose.Schema<IUser>(
@@ -33,7 +32,8 @@ const schema = new mongoose.Schema<IUser>(
 		}
 	},
 	{
-		timestamps: true // Automatically adds `createdAt` and `updatedAt`
+		timestamps: true, // Automatically adds `createdAt` and `updatedAt`
+		versionKey: false // Removes `__v` from the response
 	}
 )
 
