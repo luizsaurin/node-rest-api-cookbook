@@ -28,13 +28,25 @@ const schema = new mongoose.Schema<IUser>(
 		role: {
 			type: String,
 			enum: ['admin', 'user'],
-			default: 'user',
-			select: false
+			default: 'user'
+		},
+		createdAt: {
+			type: Date,
+			default: Date.now
+		},
+		updatedAt: {
+			type: Date,
+			default: Date.now
 		}
 	},
 	{
 		timestamps: true,
-		versionKey: false
+		versionKey: false,
+		toJSON: {
+			transform: function (doc, ret) {
+				delete ret.password
+			}
+		}
 	}
 )
 
