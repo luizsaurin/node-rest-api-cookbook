@@ -1,12 +1,17 @@
 import { Request } from 'express'
 import User from '../model/User'
-import { QueryUtils } from '../util/QueryUtils'
 
 class UserService {
 	async findAll(req: Request) {
-		const resolvedQuery = new QueryUtils(User.find(), req.query).filter().sort().select().skip().limit()
+		const { filter, sort, select, skip, limit } = req.query
 
-		const users = await resolvedQuery.query
+		const query = User.find(JSON.parse((filter as string) || '{}'))
+			.sort(JSON.parse((sort as string) || '{"createdAt":-1}'))
+			.select(JSON.parse((select as string) || '{"__v":0}'))
+			.skip(parseInt(skip as string, 10) || 0)
+			.limit(parseInt(limit as string, 10) || 10)
+
+		const users = await query.exec()
 
 		if (!users || users.length === 0) return []
 
