@@ -17,5 +17,6 @@ userRoutes.get('/', findAllUsersQueryValidator, (req, res) => UserController.fin
 userRoutes.get('/:id', (req, res) => UserController.findById(req, res))
 userRoutes.post('/', createUserValidator, (req, res) => UserController.create(req, res))
 userRoutes.patch('/:id', updateUserValidator, (req, res) => UserController.update(req, res))
+userRoutes.delete('/:id', (req, res) => UserController.remove(req, res))
 
 export default router

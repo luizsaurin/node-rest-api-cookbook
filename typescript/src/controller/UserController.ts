@@ -48,6 +48,21 @@ class UserController {
 			exceptionResponse(res, error)
 		}
 	}
+
+	async remove(req: Request, res: Response) {
+		try {
+			const user = await UserService.remove(req)
+
+			if (!user) {
+				errorResponse(res, 404, `User with id ${req.params.id} not found`)
+				return
+			}
+
+			successResponse(res, 204)
+		} catch (error) {
+			exceptionResponse(res, error)
+		}
+	}
 }
 
 export default new UserController()

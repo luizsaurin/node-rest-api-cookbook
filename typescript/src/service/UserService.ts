@@ -40,6 +40,11 @@ class UserService {
 
 		return user
 	}
+
+	async remove(req: Request) {
+		const user = await User.findByIdAndDelete(req.params.id)
+		return user
+	}
 }
 
 export default new UserService()
