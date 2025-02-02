@@ -32,6 +32,14 @@ class UserService {
 		const user = await User.create(req.body)
 		return user
 	}
+
+	async update(req: Request) {
+		const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true })
+
+		if (!user) return undefined
+
+		return user
+	}
 }
 
 export default new UserService()

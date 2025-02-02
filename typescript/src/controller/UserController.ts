@@ -33,6 +33,21 @@ class UserController {
 			exceptionResponse(res, error)
 		}
 	}
+
+	async update(req: Request, res: Response) {
+		try {
+			const user = await UserService.update(req)
+
+			if (!user) {
+				errorResponse(res, 404, `User with id ${req.params.id} not found`)
+				return
+			}
+
+			successResponse(res, 200, undefined, user)
+		} catch (error) {
+			exceptionResponse(res, error)
+		}
+	}
 }
 
 export default new UserController()

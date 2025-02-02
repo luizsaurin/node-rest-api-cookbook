@@ -33,15 +33,8 @@ const schema = new mongoose.Schema<IUser>(
 		}
 	},
 	{
-		timestamps: true, // Automatically adds `createdAt` and `updatedAt`
-		versionKey: false, // Removes `__v` from the response
-		toJSON: {
-			transform: function (doc, ret) {
-				delete ret.password
-				delete ret.updatedAt
-				delete ret.createdAt
-			}
-		}
+		timestamps: true,
+		versionKey: false
 	}
 )
 
