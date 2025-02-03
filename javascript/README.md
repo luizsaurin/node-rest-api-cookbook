@@ -1,28 +1,25 @@
 <h1 align="center"><strong>Users CRUD</strong></h1>
 
-### Summary
+### **Summary**
 
 REST API developed with Node.js and Javascript, with User CRUD operations.
 
 &nbsp;
 
-### Table of Contents
+## **Table of Contents**
 
 1. [Features](#features)
 1. [How to run](#how-to-run)
 1. [How to debug](#how-to-debug)
 1. [Dependencies](#dependencies)
+1. [How to use](#how-to-use)
 1. [Final Considerations](#final-considerations)
-   1. [Endpoints](#endpoints)
-      1. [Signup](#signup)
-      1. [Login](#login)
-      1. [Users CRUD](#users-crud)
-   1. [DTO](#dto)
+   1. [Mongoose Schema](#mongoose-schema)
    1. [Mongo ObjectIds](#mongo-objectids)
 
 &nbsp;
 
-### Features
+## **Features**
 
 - MongoDB
 - Mongoose
@@ -75,37 +72,17 @@ This is a REST API designed to work on the backend, controlling user interaction
 
 Here we will detail some points of attention that influenced the development of this project.
 
-### Endpoints
+### **Mongoose Schema**
 
-Since no Swagger documentation has been created, here is a brief description of how the endpoints implemented in this API work.
+Some points of attention about Mongoose schemas.
 
-#### Signup
-
-`/api/v1/auth/signup`
-
-Endpoint that simulates the registration of new users in the system. It is open to any user, but limited to the creation of users with the 'user' role.
-
-#### Login
-
-`/api/v1/auth/login`
-
-Endpoint intended for performing authentication and obtaining the Bearer token.
-
-#### Users CRUD
-
-`/api/v1/users/*`
-
-Endpoints intended for managing user registration, with some endpoints protected by authentication based on the user's role (admin, user).
+- It is recommended that an interface that represents the schema is always created. This helps in controlling variable typing with TypeScript.
+- In queries like `find` or `findOne`, mongoose will take into account the configuration of the schema fields, if they have the `select: false` configuration.
+- When the schema is transformed into a json object to be returned in the request response, one way to remove fields with sensitive information is by using the `toJSON` configuration.
 
 &nbsp;
 
-### DTO
-
-DTO's (or Data Transfer Object) were used to format the response to requests, selecting the fields to be displayed to the user.
-
-&nbsp;
-
-### Mongo ObjectIds
+### **Mongo ObjectIds**
 
 When inserting a new document into the database, MongoDB creates an \_id property. This property is an ObjectId, typically represented by a string of 24 hexadecimal characters.
 
