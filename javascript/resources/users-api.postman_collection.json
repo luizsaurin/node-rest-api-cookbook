@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "352077a1-19c1-429d-9fc1-6ca9808b0980",
+		"_postman_id": "d1f3ab7c-9ea7-4276-8853-cbb3cb02abdd",
 		"name": "users-api",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "13895087"
@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\":\"{{$randomFirstName}}\",\r\n    \"lastName\":\"{{$randomLastName}}\",\r\n    \"email\":\"{{$randomEmail}}\",\r\n    \"password\":\"user123\"\r\n}",
+							"raw": "{\r\n    \"name\":\"{{$randomFullName}}\",\r\n    \"email\":\"{{$randomEmail}}\",\r\n    \"password\":\"password\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -59,7 +59,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\":\"admin@mail.com\",\r\n    \"password\":\"admin123\"\r\n}",
+							"raw": "{\r\n    \"email\":\"admin@mail.com\",\r\n    \"password\":\"password\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -87,7 +87,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\":\"admin@mail.com\",\r\n    \"password\":\"admin123\"\r\n}",
+									"raw": "{\r\n    \"email\":\"admin@mail.com\",\r\n    \"password\":\"password\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -150,7 +150,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"email\":\"user@mail.com\",\r\n    \"password\":\"user123\"\r\n}",
+									"raw": "{\r\n    \"email\":\"user@mail.com\",\r\n    \"password\":\"password\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -233,39 +233,28 @@
 							],
 							"query": [
 								{
-									"key": "firstName",
-									"value": "Admin",
-									"description": "User with firstName = Admin",
-									"disabled": true
-								},
-								{
-									"key": "active",
-									"value": "true",
-									"description": "Active users",
-									"disabled": true
-								},
-								{
-									"key": "sort",
-									"value": "-createdAt",
-									"description": "Sort by createdAt desc",
-									"disabled": true
-								},
-								{
-									"key": "fields",
-									"value": "id,email",
-									"description": "Response with specified fields",
-									"disabled": true
-								},
-								{
-									"key": "page",
-									"value": "0",
-									"description": "First page of results",
+									"key": "filter",
+									"value": "{\"name\":\"Admin User\"}",
 									"disabled": true
 								},
 								{
 									"key": "limit",
-									"value": "2",
-									"description": "Limit of results per page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "skip",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "select",
+									"value": "{\"name\":1,\"email\":1}",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "{\"createdAt\":1}",
 									"disabled": true
 								}
 							]
@@ -295,7 +284,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "6799a3e5fe37d986926911a0"
+									"value": "67a02e8182bf5e4b9848a62d"
 								}
 							]
 						}
@@ -331,7 +320,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"firstName\":\"{{$randomFirstName}}\",\r\n    \"lastName\":\"{{$randomLastName}}\",\r\n    \"email\":\"{{$randomEmail}}\",\r\n    \"password\":\"user123\"\r\n}",
+							"raw": "{\r\n    \"name\":\"{{$randomFullName}}\",\r\n    \"email\":\"{{$randomEmail}}\",\r\n    \"password\":\"password\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -369,7 +358,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"active\":false\r\n}",
+							"raw": "{\r\n    \"password\":\"newPassword\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -390,7 +379,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "6799a4f151cfaea29d1d84b8"
+									"value": "67a03418a3a37ac6d20743d2"
 								}
 							]
 						}
