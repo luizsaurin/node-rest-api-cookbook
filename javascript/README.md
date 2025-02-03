@@ -76,7 +76,6 @@ Here we will detail some points of attention that influenced the development of 
 
 Some points of attention about Mongoose schemas.
 
-- It is recommended that an interface that represents the schema is always created. This helps in controlling variable typing with TypeScript.
 - In queries like `find` or `findOne`, mongoose will take into account the configuration of the schema fields, if they have the `select: false` configuration.
 - When the schema is transformed into a json object to be returned in the request response, one way to remove fields with sensitive information is by using the `toJSON` configuration.
 
