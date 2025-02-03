@@ -51,6 +51,12 @@ export const exceptionResponse = (res: Response, err: Error | unknown) => {
 		return
 	}
 
+	// JWT - TokenExpiredError
+	if (err instanceof Error && err.name === 'TokenExpiredError') {
+		errorResponse(res, 401, 'Invalid or expired token')
+		return
+	}
+
 	return res.status(500).json({
 		status: 'error',
 		message: err instanceof Error ? err.message : 'Internal Server Error'

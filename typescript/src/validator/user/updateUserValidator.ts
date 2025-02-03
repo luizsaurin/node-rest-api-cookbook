@@ -1,8 +1,7 @@
 /* eslint-disable no-useless-escape */
-import { Request, Response, NextFunction } from 'express'
-import { errorResponse, exceptionResponse } from '../../util/responseUtils'
+import { NextFunction, Request, Response } from 'express'
 import Joi from 'joi'
-import { UserRole } from '../../enum/userRole'
+import { errorResponse, exceptionResponse } from '../../util/responseUtils'
 
 export const updateUserValidator = async (req: Request, res: Response, next: NextFunction) => {
 	try {
@@ -10,7 +9,7 @@ export const updateUserValidator = async (req: Request, res: Response, next: Nex
 			name: Joi.string().optional(),
 			email: Joi.string().email().optional(),
 			password: Joi.string().optional(),
-			role: Joi.string().valid(UserRole.ADMIN, UserRole.USER).optional()
+			role: Joi.string().valid('admin', 'user').optional()
 		})
 
 		const { error } = schema.validate(req.body, { abortEarly: false })

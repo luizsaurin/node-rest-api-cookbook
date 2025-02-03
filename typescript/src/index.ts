@@ -10,7 +10,7 @@ console.log('💫 Connecting to database...')
 
 mongoose
 	.connect(process.env.DATABASE_CONNECTION_URL!, {
-		serverSelectionTimeoutMS: Number(process.env.DATABASE_CONNECTION_TIMEOUT!)
+		serverSelectionTimeoutMS: 5000
 	})
 	.then(() => {
 		console.log('🌟 Database connected successfully')
