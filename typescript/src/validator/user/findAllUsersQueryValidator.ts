@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { ParsedQs } from 'qs'
-import { InvalidQueryParamError } from '../error/InvalidQueryParamsError'
-import { exceptionResponse } from '../util/responseUtils'
+import { InvalidQueryParamError } from '../../error/InvalidQueryParamsError'
+import { exceptionResponse } from '../../util/responseUtils'
 
 export const findAllUsersQueryValidator = async (req: Request, res: Response, next: NextFunction) => {
 	try {

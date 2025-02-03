@@ -9,6 +9,7 @@ import morgan from 'morgan'
 import xss from 'xss-clean'
 import router from './routes'
 import { errorResponse, exceptionResponse } from './util/responseUtils'
+import User from './model/User'
 
 dotenv.config()
 
@@ -23,7 +24,8 @@ class App {
 		this.setupRequestLogging()
 		this.setupRouter()
 		this.setupExceptionHandler()
-		console.log('✅ App setup finished')
+		this.addInitialUsersToDatabase()
+		console.log('🌟 App setup finished')
 	}
 
 	private setupUncaughtExceptionHandler() {
@@ -70,7 +72,7 @@ class App {
 
 		// Handle unexisting routes
 		this.app.all('*', (req: Request, res: Response) => {
-			errorResponse(res, 403)
+			errorResponse(res, 404, 'Route not found')
 		})
 	}
 
@@ -78,6 +80,29 @@ class App {
 		this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 			exceptionResponse(res, err)
 		})
+	}
+
+	private async addInitialUsersToDatabase() {
+		if (process.env.NODE_ENV === 'production') {
+			return
+		}
+
+		await User.deleteMany()
+
+		await User.create([
+			{
+				name: 'Admin User',
+				email: 'admin@mail.com',
+				password: 'password',
+				role: 'admin'
+			},
+			{
+				name: 'Regular User',
+				email: 'user@mail.com',
+				password: 'password',
+				role: 'user'
+			}
+		])
 	}
 }
 

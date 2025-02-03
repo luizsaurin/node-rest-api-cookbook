@@ -1,9 +1,9 @@
 /* eslint-disable no-useless-escape */
 import { Request, Response, NextFunction } from 'express'
-import { errorResponse, exceptionResponse } from '../util/responseUtils'
+import { errorResponse, exceptionResponse } from '../../util/responseUtils'
 import Joi from 'joi'
 
-export const createUserValidator = async (req: Request, res: Response, next: NextFunction) => {
+export const signupValidator = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const schema = Joi.object({
 			name: Joi.string().required(),

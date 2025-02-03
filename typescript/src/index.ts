@@ -13,7 +13,7 @@ mongoose
 		serverSelectionTimeoutMS: Number(process.env.DATABASE_CONNECTION_TIMEOUT!)
 	})
 	.then(() => {
-		console.log('✅ Database connected successfully')
+		console.log('🌟 Database connected successfully')
 
 		console.log('💫 Starting app...')
 
