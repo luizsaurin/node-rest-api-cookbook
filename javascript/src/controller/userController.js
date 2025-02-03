@@ -1,64 +1,67 @@
-import userService from '../service/userService.js'
-import {
-	response200,
-	response200FindAndCount,
-	response201,
-	response204,
-	response404,
-	responseError
-} from '../util/responseUtils.js'
+import UserService from '../service/UserService.js'
+import { errorResponse, exceptionResponse, successResponse } from '../util/responseUtils.js'
 
-const findAll = async (req, res) => {
-	try {
-		const results = await userService.findAll(req.query)
-		response200FindAndCount(res, results, results.length)
-	} catch (error) {
-		responseError(res, error)
+class UserController {
+	async findAll(req, res) {
+		try {
+			successResponse(res, 200, undefined, await UserService.findAll(req))
+		} catch (error) {
+			exceptionResponse(res, error)
+		}
+	}
+
+	async findById(req, res) {
+		try {
+			const user = await UserService.findById(req)
+
+			if (!user) {
+				errorResponse(res, 404, `User with id ${req.params.id} not found`)
+				return
+			}
+
+			successResponse(res, 200, undefined, user)
+		} catch (error) {
+			exceptionResponse(res, error)
+		}
+	}
+
+	async create(req, res) {
+		try {
+			successResponse(res, 201, undefined, await UserService.create(req))
+		} catch (error) {
+			exceptionResponse(res, error)
+		}
+	}
+
+	async update(req, res) {
+		try {
+			const user = await UserService.update(req)
+
+			if (!user) {
+				errorResponse(res, 404, `User with id ${req.params.id} not found`)
+				return
+			}
+
+			successResponse(res, 200, undefined, user)
+		} catch (error) {
+			exceptionResponse(res, error)
+		}
+	}
+
+	async remove(req, res) {
+		try {
+			const user = await UserService.remove(req)
+
+			if (!user) {
+				errorResponse(res, 404, `User with id ${req.params.id} not found`)
+				return
+			}
+
+			successResponse(res, 204)
+		} catch (error) {
+			exceptionResponse(res, error)
+		}
 	}
 }
 
-const findById = async (req, res) => {
-	try {
-		const user = await userService.findById(req.params.id)
-
-		if (!user) return response404(res, `User with id ${req.params.id} not found`)
-
-		response200(res, user)
-	} catch (error) {
-		responseError(res, error)
-	}
-}
-
-const create = async (req, res) => {
-	try {
-		response201(res, await userService.create(req.body))
-	} catch (error) {
-		responseError(res, error)
-	}
-}
-
-const update = async (req, res) => {
-	try {
-		const user = await userService.update(req.params.id, req.body)
-
-		if (!user) return response404(res, `User with id ${req.params.id} not found`)
-
-		response200(res, user)
-	} catch (error) {
-		responseError(res, error)
-	}
-}
-
-const remove = async (req, res) => {
-	try {
-		const user = await userService.remove(req.params.id)
-
-		if (!user) return response404(res, `User with id ${req.params.id} not found`)
-
-		response204(res)
-	} catch (error) {
-		responseError(res, error)
-	}
-}
-
-export default { findAll, findById, create, update, remove }
+export default new UserController()

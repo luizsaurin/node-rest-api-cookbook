@@ -1,24 +1,29 @@
-import authService from '../service/authService.js'
-import { response200, response201, response400, responseError } from '../util/responseUtils.js'
+import AuthService from '../service/AuthService.js'
+import { errorResponse, exceptionResponse, successResponse } from '../util/responseUtils.js'
 
-const signup = async (req, res) => {
-	try {
-		response201(res, await authService.signup(req.body))
-	} catch (error) {
-		responseError(res, error)
+class AuthController {
+	async signup(req, res) {
+		try {
+			successResponse(res, 201, undefined, await AuthService.signup(req))
+		} catch (error) {
+			exceptionResponse(res, error)
+		}
+	}
+
+	async login(req, res) {
+		try {
+			const token = await AuthService.login(req)
+
+			if (!token) {
+				errorResponse(res, 401, 'Invalid credentials')
+				return
+			}
+
+			successResponse(res, 200, undefined, await AuthService.login(req))
+		} catch (error) {
+			exceptionResponse(res, error)
+		}
 	}
 }
 
-const login = async (req, res) => {
-	try {
-		const token = await authService.login(req.body)
-
-		if (!token) return response400(res, `Invalid credentiais`)
-
-		response200(res, token)
-	} catch (error) {
-		responseError(res, error)
-	}
-}
-
-export default { signup, login }
+export default new AuthController()

@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const handleUnhandledRejections = async (server) => {
+const unhandledRejectionsHandler = async (server) => {
 	process.on('unhandledRejection', (err) => {
 		console.error('Unhandled Rejection:', err.name, err.message)
 		server.close(() => {
@@ -8,4 +8,4 @@ const handleUnhandledRejections = async (server) => {
 	})
 }
 
-export default handleUnhandledRejections
+export default unhandledRejectionsHandler

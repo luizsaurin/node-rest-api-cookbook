@@ -1,49 +1,84 @@
-import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
+import { Schema, model } from 'mongoose'
 
-const schema = new mongoose.Schema(
+const schema = new Schema(
 	{
-		firstName: String,
-		lastName: String,
-		email: { type: String, required: true, unique: true },
-		active: { type: Boolean, default: true },
+		name: {
+			type: String
+		},
+		email: {
+			type: String,
+			required: true
+		},
 		password: {
 			type: String,
 			required: true
 		},
 		role: {
 			type: String,
-			enum: ['user', 'admin'],
+			enum: ['admin', 'user'],
 			default: 'user'
+		},
+		createdAt: {
+			type: Date,
+			default: Date.now
+		},
+		updatedAt: {
+			type: Date,
+			default: Date.now
+		},
+		passwordChangedAt: {
+			type: Date
 		}
 	},
 	{
-		timestamps: true // Automatically adds `createdAt` and `updatedAt`
+		timestamps: true,
+		versionKey: false,
+		toJSON: {
+			transform: function (doc, ret) {
+				delete ret.password
+				delete ret.passwordChangedAt
+			}
+		}
 	}
 )
 
 // Encrypt password before save
 schema.pre('save', async function (next) {
-	if (!this.isModified('password')) return next()
+	if (!this.isModified('password')) {
+		return next()
+	}
+
 	this.password = await bcrypt.hash(this.password, 12)
+
 	next()
 })
 
-// Verify input password
-schema.methods.verifyPassword = async function (input, userPassword) {
-	return await bcrypt.compare(input, userPassword)
+// Encrypt password before update
+schema.pre('findOneAndUpdate', async function (next) {
+	const update = this.getUpdate()
+
+	if (update.password) {
+		update.password = await bcrypt.hash(update.password, 12)
+		update.passwordChangedAt = new Date()
+	}
+
+	next()
+})
+
+// Compare password
+schema.methods.comparePassword = async function (candidatePassword) {
+	return await bcrypt.compare(candidatePassword, this.password)
 }
 
 // Verify if password was changed after jwt was issued
 schema.methods.changedPasswordAfterTokenIssued = function (JWTTimestamp) {
 	if (this.passwordChangedAt) {
-		const changedTimestamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10)
+		const changedTimestamp = parseInt(String(this.passwordChangedAt.getTime() / 1000), 10)
 		return JWTTimestamp < changedTimestamp
 	}
 
 	return false
 }
 
-const User = mongoose.model('User', schema)
-
-export default User
+export default model('User', schema)
