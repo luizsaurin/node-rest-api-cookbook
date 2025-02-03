@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Response } from 'express'
 
 /**
@@ -25,6 +26,8 @@ export const errorResponse = (res: Response, statusCode: number, message?: strin
  * Handles unexpected error responses (e.g. internal server error, database errors)
  */
 export const exceptionResponse = (res: Response, err: Error | unknown) => {
+	console.error(err)
+
 	// MongoDB - CastError (e.g. invalid ObjectId)
 	if (err instanceof Error && err.name === 'CastError') {
 		const param = (err as { path?: string }).path || 'input'
