@@ -1,29 +1,37 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Patch, Post } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
+import { CreateUserRequestDto } from './dto/create-user-request.dto'
+import { FindAllUsersRequestDto } from './dto/find-all-users-request.dto'
+import { FindAllUsersResponseDto } from './dto/find-all-users-response.dto'
+import { UserDto } from './dto/user.dto'
 import { User } from './user.entity'
 import { UserService } from './user.service'
 
-@Controller('user')
+@Controller('api/v1/users')
 export class UserController {
 	constructor(private readonly userService: UserService) {}
 
 	@Get()
-	async findAll(): Promise<User[]> {
-		return await this.userService.findAll()
+	async findAll(@Query() query: FindAllUsersRequestDto): Promise<FindAllUsersResponseDto> {
+		const users = await this.userService.findAll(query)
+		return new FindAllUsersResponseDto(users)
 	}
 
 	@Get(':id')
-	async findOne(@Param('id') id: number): Promise<User | null> {
-		return await this.userService.findOne(id)
+	async findById(@Param('id') id: number): Promise<UserDto> {
+		const user = (await this.userService.findById(id)) as User
+		return new UserDto(user)
 	}
 
 	@Post()
-	async create(@Body() user: Partial<User>): Promise<User> {
-		return await this.userService.create(user)
+	async create(@Body() dto: CreateUserRequestDto): Promise<UserDto> {
+		const user = await this.userService.create(dto.name, dto.email, dto.password)
+		return new UserDto(user)
 	}
 
 	@Patch(':id')
-	async update(@Param('id') id: number, @Body() user: Partial<User>): Promise<User | null> {
-		return await this.userService.update(id, user)
+	async update(@Param('id') id: number, @Body() user: Partial<User>) {
+		const updatedUser = (await this.userService.update(id, user)) as User
+		return new UserDto(updatedUser)
 	}
 
 	@Delete(':id')

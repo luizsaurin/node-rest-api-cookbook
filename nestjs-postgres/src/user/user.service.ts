@@ -1,17 +1,43 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { User } from './user.entity'
 import { Repository } from 'typeorm'
+import { User } from './user.entity'
+import { FindAllUsersRequestDto } from './dto/find-all-users-request.dto'
 
 @Injectable()
 export class UserService {
 	constructor(@InjectRepository(User) private userRepository: Repository<User>) {}
 
-	async findAll(): Promise<User[]> {
-		return await this.userRepository.find()
+	async findAll(query: FindAllUsersRequestDto): Promise<User[]> {
+		const { skip, take, sort, name, email } = query
+
+		const queryBuilder = this.userRepository.createQueryBuilder()
+
+		if (name) {
+			queryBuilder.where('name = :name', { name })
+		}
+
+		if (email) {
+			queryBuilder.where('email = :email', { email })
+		}
+
+		if (sort) {
+			let [column, order] = sort.split(',')
+
+			column = column ? column.trim() : 'id'
+
+			queryBuilder.orderBy(column, order === 'asc' ? 'ASC' : 'DESC')
+		} else {
+			queryBuilder.orderBy('id', 'DESC')
+		}
+
+		queryBuilder.skip(skip ? skip : 0)
+		queryBuilder.take(take ? take : 10)
+
+		return await queryBuilder.getMany()
 	}
 
-	async findOne(id: number): Promise<User | null> {
+	async findById(id: number): Promise<User | null> {
 		const user = await this.userRepository.findOne({ where: { id } })
 
 		if (!user) {
@@ -21,12 +47,13 @@ export class UserService {
 		return user
 	}
 
-	async create(user: Partial<User>): Promise<User> {
+	async create(name: string, email: string, password: string): Promise<User> {
+		const user = this.userRepository.create({ name, email, password })
 		return await this.userRepository.save(user)
 	}
 
 	async update(id: number, userData: Partial<User>): Promise<User | null> {
-		const user = await this.findOne(id)
+		const user = await this.findById(id)
 
 		if (!user) {
 			throw new NotFoundException('User not found')
@@ -38,7 +65,7 @@ export class UserService {
 	}
 
 	async remove(id: number): Promise<void> {
-		const user = await this.findOne(id)
+		const user = await this.findById(id)
 
 		if (!user) {
 			throw new NotFoundException('User not found')
