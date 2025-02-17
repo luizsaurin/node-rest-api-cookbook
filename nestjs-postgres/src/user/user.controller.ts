@@ -5,6 +5,7 @@ import { FindAllUsersResponseDto } from './dto/find-all-users-response.dto'
 import { UserDto } from './dto/user.dto'
 import { User } from './user.entity'
 import { UserService } from './user.service'
+import { UpdateUserRequestDto } from './dto/update-user-request.dto'
 
 @Controller('api/v1/users')
 export class UserController {
@@ -24,13 +25,13 @@ export class UserController {
 
 	@Post()
 	async create(@Body() dto: CreateUserRequestDto): Promise<UserDto> {
-		const user = await this.userService.create(dto.name, dto.email, dto.password)
+		const user = await this.userService.create(dto)
 		return new UserDto(user)
 	}
 
 	@Patch(':id')
-	async update(@Param('id') id: number, @Body() user: Partial<User>) {
-		const updatedUser = (await this.userService.update(id, user)) as User
+	async update(@Param('id') id: number, @Body() dto: UpdateUserRequestDto): Promise<UserDto> {
+		const updatedUser = (await this.userService.update(id, dto)) as User
 		return new UserDto(updatedUser)
 	}
 

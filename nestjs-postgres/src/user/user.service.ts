@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { User } from './user.entity'
 import { FindAllUsersRequestDto } from './dto/find-all-users-request.dto'
+import { CreateUserRequestDto } from './dto/create-user-request.dto'
+import { UpdateUserRequestDto } from './dto/update-user-request.dto'
 
 @Injectable()
 export class UserService {
@@ -47,19 +49,23 @@ export class UserService {
 		return user
 	}
 
-	async create(name: string, email: string, password: string): Promise<User> {
-		const user = this.userRepository.create({ name, email, password })
+	async create(dto: CreateUserRequestDto): Promise<User> {
+		const user = this.userRepository.create(dto) as User
+		if (user.password) user.password = await user.encryptPassword(user.password)
 		return await this.userRepository.save(user)
 	}
 
-	async update(id: number, userData: Partial<User>): Promise<User | null> {
+	async update(id: number, dto: UpdateUserRequestDto): Promise<User | null> {
 		const user = await this.findById(id)
 
 		if (!user) {
 			throw new NotFoundException('User not found')
 		}
 
-		Object.assign(user, userData)
+		if (dto.name) user.name = dto.name
+		if (dto.email) user.email = dto.email
+		if (dto.role) user.role = dto.role
+		if (dto.password) await user.updatePassword(dto.password)
 
 		return this.userRepository.save(user)
 	}

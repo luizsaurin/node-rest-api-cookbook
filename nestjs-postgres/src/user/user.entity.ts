@@ -1,15 +1,7 @@
-import {
-	BeforeInsert,
-	BeforeUpdate,
-	Column,
-	CreateDateColumn,
-	Entity,
-	PrimaryGeneratedColumn,
-	UpdateDateColumn
-} from 'typeorm'
-import { UserRole } from './enum/user-role.enum'
-import { randomBytes, scrypt as _scrypt } from 'crypto'
+import { scrypt as _scrypt, randomBytes } from 'crypto'
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
 import { promisify } from 'util'
+import { UserRole } from './enum/user-role.enum'
 
 const scrypt = promisify(_scrypt)
 
@@ -39,26 +31,23 @@ export class User {
 	@Column({ name: 'password_changed_at', type: 'timestamptz', nullable: true })
 	passwordChangedAt: Date
 
-	@BeforeInsert()
-	private async beforeInsert() {
-		await this.encryptPassword()
+	async updatePassword(newPassword: string): Promise<void> {
+		if (await this.comparePassword(this.password, newPassword)) return
+
+		this.password = await this.encryptPassword(newPassword)
+		this.passwordChangedAt = new Date()
 	}
 
-	@BeforeUpdate()
-	private async beforeUpdate() {
-		await this.encryptPassword()
-	}
-
-	private async encryptPassword(): Promise<void> {
+	async encryptPassword(password: string): Promise<string> {
 		const salt = randomBytes(8).toString('hex')
-		const hash = (await scrypt(this.password, salt, 32)) as Buffer
-		this.password = salt + '.' + hash.toString('hex')
+		const hash = (await scrypt(password, salt, 32)) as Buffer
+		return salt + '.' + hash.toString('hex')
 	}
 
-	private async comparePassword(storedPassword: string, candidatePassword: string): Promise<boolean> {
-		const [salt, storedHash] = this.password.split('.')
+	async comparePassword(hashedPassword: string, candidatePassword: string): Promise<boolean> {
+		const [salt, storedHash] = hashedPassword.split('.')
 		const hash = (await scrypt(candidatePassword, salt, 32)) as Buffer
 
-		return storedHash !== hash.toString('hex')
+		return storedHash === hash.toString('hex')
 	}
 }
