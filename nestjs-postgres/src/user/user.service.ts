@@ -49,6 +49,16 @@ export class UserService {
 		return user
 	}
 
+	async findByEmail(email: string): Promise<User | null> {
+		const user = await this.userRepository.findOne({ where: { email } })
+
+		if (!user) {
+			throw new NotFoundException('User not found')
+		}
+
+		return user
+	}
+
 	async create(dto: CreateUserRequestDto): Promise<User> {
 		const user = this.userRepository.create(dto) as User
 		if (user.password) user.password = await user.encryptPassword(user.password)
