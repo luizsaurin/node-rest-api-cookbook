@@ -1,3 +1,3 @@
-export class LoginResponsetDto {
+export class LoginResponseDto {
 	constructor(private token: string) {}
 }
